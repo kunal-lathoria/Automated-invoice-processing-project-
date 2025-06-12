@@ -1,0 +1,34 @@
+// InvoiceUpload.tsx
+import { useDropzone } from 'react-dropzone';
+import { processInvoice } from '../services/api';
+
+const InvoiceUpload = () => {
+  const onDrop = async (acceptedFiles: File[]) => {
+    const formData = new FormData();
+    acceptedFiles.forEach(file => formData.append('invoices', file));
+    
+    try {
+      const response = await processInvoice(formData);
+      // Update UI with processing status
+    } catch (error) {
+      // Handle error
+    }
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': ['.png', '.jpg', '.jpeg'],
+      'application/pdf': ['.pdf'],
+      'application/vnd.ms-excel': ['.xls'],
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx']
+    }
+  });
+
+  return (
+    <div {...getRootProps()} className="dropzone">
+      <input {...getInputProps()} />
+      <p>Drag & drop invoices here, or click to select files</p>
+    </div>
+  );
+};
